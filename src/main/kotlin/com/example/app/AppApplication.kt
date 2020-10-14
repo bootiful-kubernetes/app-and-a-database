@@ -1,26 +1,27 @@
 package com.example.app
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
-import org.springframework.context.ApplicationListener
 import org.springframework.context.support.beans
-import org.springframework.core.io.ClassPathResource
-import org.springframework.data.annotation.Id
-import org.springframework.data.r2dbc.core.DatabaseClient
-import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.router
-import reactor.core.publisher.Flux
-import java.io.InputStreamReader
 
 @SpringBootApplication
 class AppApplication
 
 fun main(args: Array<String>) {
 	runApplication<AppApplication>(*args) {
+
 		addInitializers(beans {
+			bean {
+				router {
+					GET("/hello") {
+						ServerResponse.ok().bodyValue("Hello, world!")
+					}
+				}
+			}
+		})
+/*		addInitializers(beans {
 			bean {
 				ApplicationListener<ApplicationReadyEvent> {
 					val dbc = ref<DatabaseClient>()
@@ -46,10 +47,9 @@ fun main(args: Array<String>) {
 					}
 				}
 			}
-		})
+		})*/
 	}
 }
 
-interface CustomerRepository : ReactiveCrudRepository<Customer, Int>
-
-data class Customer(@Id var id: Int?, val name: String)
+//interface CustomerRepository : ReactiveCrudRepository<Customer, Int>
+//data class Customer(@Id var id: Int?, val name: String)
