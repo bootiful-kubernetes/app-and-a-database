@@ -6,8 +6,6 @@ metadata:
   labels:
     app: app
 data:
-  SPRING_R2DBC_PASSWORD: bp
-  SPRING_R2DBC_USERNAME: bp
   SPRING_PROFILES_ACTIVE: cloud
 
 ---
@@ -26,12 +24,20 @@ spec:
     spec:
       containers:
         - name: app
+          env:
+            - name: SPRING_R2DBC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: mysql-secrets
+            - name: SPRING_R2DBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mysql-secrets
           envFrom:
             - configMapRef:
                 name: app-config
-#          env:
-#            - name: GET_HOSTS_FROM
-#              value: "dns"
           image: gcr.io/pgtm-jlong/app-and-db:latest
           imagePullPolicy: Always
           readinessProbe:
