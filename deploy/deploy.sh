@@ -6,18 +6,34 @@ cd $(dirname $0)/..
 root_dir=$(pwd)
 ##
 ## Push the App To The Container Registry
-docker rmi -f $(docker images -a -q)
-mvn -DskipTests=true clean spring-boot:build-image
-image_id=$(docker images -q $APP_NAME)
-docker tag $image_id gcr.io/${PROJECT_ID}/${APP_NAME}
-docker push gcr.io/${PROJECT_ID}/${APP_NAME}
-docker pull gcr.io/${PROJECT_ID}/${APP_NAME}:latest
+# docker rmi -f $(docker images -a -q)
+# mvn -DskipTests=true clean spring-boot:build-image
+# image_id=$(docker images -q $APP_NAME)
+# docker tag $image_id gcr.io/${PROJECT_ID}/${APP_NAME}
+# docker push gcr.io/${PROJECT_ID}/${APP_NAME}
+# docker pull gcr.io/${PROJECT_ID}/${APP_NAME}:latest
 ##
 ## Deploy
 
-#
-# kubectl delete -f $root_dir/deploy/mysql.yaml
+
+kubectl delete -f $root_dir/deploy/mysql.yaml
 kubectl delete -f $root_dir/deploy/app.yaml
+kubectl delete secrets mysql-secrets
+
+kubectl apply -f <(echo "
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-"password"}
+  MYSQL_DATABASE: bp
+  MYSQL_USER: bp
+  MYSQL_PASSWORD: ${MYSQL_PASSWORD:-"bp"}
+")
+
 
 kubectl apply -f $root_dir/deploy/mysql.yaml
 kubectl apply -f $root_dir/deploy/app.yaml
