@@ -13,6 +13,9 @@ spec:
     spec:
       containers:
         - name: app
+          envFrom:
+            - configMapRef:
+                name: app-config
           env:
             - name: GET_HOSTS_FROM
               value: "dns"
