@@ -1,8 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: mysql-deployment
+  labels:
+    app: mysql
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -24,11 +27,11 @@ spec:
             - configMapRef:
                 name: mysql-config
           volumeMounts:
-            - mountPath: /var/lib/
+            - mountPath: "/var/lib/mysql"
               subPath: mysql
-              name: mysql
+              name: mysql-data
       volumes:
-        - name: mysql
+        - name: mysql-data
           persistentVolumeClaim:
             claimName: mysql-pv-claim
 
