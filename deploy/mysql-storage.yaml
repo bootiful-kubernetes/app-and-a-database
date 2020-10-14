@@ -1,9 +1,9 @@
 kind:  PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name : postgres-pv-claim
+  name : mysql-pv-claim
   labels:
-    app: postgres
+    app: mysql
 spec:
   accessModes:
     - ReadWriteOnce
