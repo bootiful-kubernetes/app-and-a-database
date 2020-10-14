@@ -5,6 +5,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationListener
 import org.springframework.context.support.beans
+import org.springframework.core.env.Environment
+import org.springframework.core.env.get
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.annotation.Id
 import org.springframework.data.r2dbc.core.DatabaseClient
@@ -21,10 +23,15 @@ class AppApplication
 fun main(args: Array<String>) {
 	runApplication<AppApplication>(*args) {
 		addInitializers(beans {
+
 			bean {
 				ApplicationListener<ApplicationReadyEvent> {
+					val env = ref<Environment>()
 					val dbc = ref<DatabaseClient>()
 					val cr = ref<CustomerRepository>()
+
+					println(env ["spring.r2dbc.url"])
+
 					ClassPathResource("/schema.sql").inputStream.use {
 						InputStreamReader(it).use { ir ->
 							val sql = ir.readText()
