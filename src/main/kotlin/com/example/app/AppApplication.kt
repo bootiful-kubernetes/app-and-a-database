@@ -22,8 +22,6 @@ fun main(args: Array<String>) {
 	runApplication<AppApplication>(*args) {
 		addInitializers(beans {
 			bean {
-
-
 				ApplicationListener<ApplicationReadyEvent> {
 					val dbc = ref<DatabaseClient>()
 					val cr = ref<CustomerRepository>()
@@ -34,7 +32,7 @@ fun main(args: Array<String>) {
 									.execute(sql).fetch().rowsUpdated()
 									.thenMany(cr.saveAll(Flux.just(Customer(null, "A"), Customer(null, "B"))))
 									.thenMany(cr.findAll())
-									.subscribe()
+									.subscribe { println(it) }
 						}
 					}
 
@@ -54,4 +52,4 @@ fun main(args: Array<String>) {
 
 interface CustomerRepository : ReactiveCrudRepository<Customer, Int>
 
-class Customer(@Id var id: Int?, val name: String)
+data class Customer(@Id var id: Int?, val name: String)
