@@ -6,6 +6,10 @@ name: API
 env:
   MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD  }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE  }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER  }}
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT  }}
+  GKE_SA_KEY: ${{ secrets.GKE_SA_KEY  }}
 
 on:
   create:
